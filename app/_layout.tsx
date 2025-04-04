@@ -1,39 +1,37 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { useEffect, useState } from "react";
+import { Slot, useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function Layout() {
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+    useEffect(() => {
+        let isMounted = true;
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+        const checkAuth = async () => {
+            try {
+                const storedToken = await AsyncStorage.getItem("userToken");
+                console.log("📌 Token recuperado de AsyncStorage:", storedToken);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+                if (!storedToken && isMounted) {
+                    router.replace("/Login"); // ✅ Usa la ruta correcta
+                }
+            } catch (error) {
+                console.error("❌ Error al recuperar el token:", error);
+            } finally {
+                if (isMounted) setIsLoading(false);
+            }
+        };
 
-  if (!loaded) {
-    return null;
-  }
+        checkAuth();
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+        return () => {
+            isMounted = false; // Evita que se actualice el estado si el componente se desmonta
+        };
+    }, []);
+
+    if (isLoading) return null; // Evita parpadeos
+
+    return <Slot />; // Renderiza la pantalla actual según el enrutamiento
 }
