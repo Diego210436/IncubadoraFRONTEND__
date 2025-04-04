@@ -13,7 +13,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-na
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 
-const API_URL = "http://localhost:3001/sensoresyactuadores"; //RUTA la peticion en el swagger creo papu
+const API_URL = "http://localhost:3001/sensoresyactuadores";
 
 const SensorItem = ({ item }: { item: any }) => {
     const scale = useSharedValue(1);
@@ -86,9 +86,8 @@ const Sensores = () => {
             if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
 
             const data = await response.json();
-            console.log("📡 Datos recibidos:", data); // Verifica los datos en consola
+            console.log("📡 Datos recibidos:", data);
 
-            // Asegúrate de acceder correctamente a los datos según la API
             setSensores(Array.isArray(data) ? data : data.sensores || []);
         } catch (error) {
             console.error("❌ Error al obtener sensores:", error);
@@ -104,10 +103,10 @@ const Sensores = () => {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaView style={styles.container}>
-                <TouchableOpacity onPress={() => router.push("/Home")}> 
+                <TouchableOpacity onPress={() => router.push("/Home")}>
                     <Text style={styles.homeIcon}>🏠</Text>
                 </TouchableOpacity>
-                <Text style={styles.title}>Registros de Sensores</Text>
+                <Text style={styles.title}>Registros de Sensores y Actuadores</Text>
                 {loading ? (
                     <ActivityIndicator size="large" color="#1E88E5" />
                 ) : sensores.length > 0 ? (
@@ -127,7 +126,7 @@ const Sensores = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#222831',
+        backgroundColor: "#222831",
         padding: 20,
     },
     title: {
@@ -135,10 +134,10 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         marginBottom: 20,
-        color: "#0a0101",
+        color: "#FFFFFF",
     },
     card: {
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#333",
         padding: 20,
         borderRadius: 10,
         marginBottom: 10,
@@ -151,25 +150,25 @@ const styles = StyleSheet.create({
     tipo: {
         fontSize: 18,
         fontWeight: "bold",
-        color: "#1E88E5",
+        color: "#FFFFFF",
     },
     nombre: {
         fontSize: 16,
-        color: "#424242",
+        color: "#AAAAAA",
     },
     valor: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#388E3C",
+        color: "#8E44AD",
     },
     fecha: {
         fontSize: 12,
-        color: "#757575",
+        color: "#AAAAAA",
         marginTop: 5,
     },
     menu: {
         marginTop: 10,
-        backgroundColor: "#f1f1f1",
+        backgroundColor: "#444",
         borderRadius: 5,
         padding: 10,
     },
@@ -177,16 +176,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         padding: 5,
         textAlign: "center",
-        color: "#000",
+        color: "#FFFFFF",
+        borderBottomWidth: 1,
+        borderBottomColor: "#555",
     },
     homeIcon: {
         fontSize: 24,
         textAlign: "center",
+        color: "#FFFFFF",
+        marginBottom: 20,
     },
     noData: {
         fontSize: 16,
         textAlign: "center",
-        color: "#757575",
+        color: "#AAAAAA",
         marginTop: 20,
     },
 });

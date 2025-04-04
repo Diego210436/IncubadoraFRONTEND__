@@ -34,12 +34,12 @@ const ListarUsuarios = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity onPress={() => router.push("/usuarios/agregarUsuario")}>
+            <TouchableOpacity style={styles.addButtonContainer} onPress={() => router.push("/usuarios/agregarUsuario")}>
                 <Text style={styles.addButton}>+ Agregar Usuario</Text>
             </TouchableOpacity>
             <Text style={styles.title}>Lista de Usuarios</Text>
             {loading ? (
-                <ActivityIndicator size="large" color="#1E88E5" />
+                <ActivityIndicator size="large" color="#8E44AD" />
             ) : (
                 <FlatList
                     data={usuarios}
@@ -65,15 +65,64 @@ const ListarUsuarios = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: "#f5f5f5" },
-    title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20 },
-    card: { backgroundColor: "#fff", padding: 20, marginBottom: 10, borderRadius: 10 },
-    nombre: { fontSize: 18, fontWeight: "bold" },
-    email: { fontSize: 14, color: "#666" },
-    actions: { flexDirection: "row", justifyContent: "space-around", marginTop: 10 },
-    editButton: { color: "blue" },
-    deleteButton: { color: "red" },
-    addButton: { backgroundColor: "#1E88E5", color: "#fff", padding: 10, textAlign: "center", borderRadius: 5 },
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: "#222831",
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 20,
+        color: "#FFFFFF",
+    },
+    card: {
+        backgroundColor: "#333",
+        padding: 20,
+        marginBottom: 10,
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 3 },
+        shadowRadius: 5,
+        elevation: 3,
+    },
+    nombre: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#FFFFFF",
+    },
+    email: {
+        fontSize: 14,
+        color: "#AAAAAA",
+        marginTop: 5,
+    },
+    actions: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginTop: 10,
+    },
+    editButton: {
+        color: "#8E44AD",
+        fontWeight: "bold",
+    },
+    deleteButton: {
+        color: "#E64A19",
+        fontWeight: "bold",
+    },
+    addButtonContainer: {
+        backgroundColor: "#8E44AD",
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 20,
+        alignSelf: "center",
+    },
+    addButton: {
+        color: "#FFFFFF",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
 });
 
 export default ListarUsuarios;

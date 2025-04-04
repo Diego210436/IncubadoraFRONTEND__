@@ -1,8 +1,13 @@
-import { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { Input, Text, Button, Icon } from 'react-native-elements';
 import { useRouter } from "expo-router";
 
-const LoginScreen = ({ onLogin }: { onLogin: (email: string, password: string) => void }) => {
+interface LoginScreenProps {
+    onLogin: (email: string, password: string) => Promise<void>;
+}
+
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -25,34 +30,40 @@ const LoginScreen = ({ onLogin }: { onLogin: (email: string, password: string) =
                 resizeMode="contain"
             />
 
-            <Text style={styles.header}>Bienvenido</Text>
-            <Text style={styles.header}>Ingresa tus datos</Text>
-            <Text style={styles.label}>Correo electrónico:</Text>
-            <TextInput 
-                style={styles.input} 
-                value={email} 
-                onChangeText={setEmail} 
-                autoCapitalize="none" 
-                placeholder="Ingresa tu correo" 
+            <Text h3 style={styles.header}>Bienvenido</Text>
+            <Text h4 style={styles.header}>Ingresa tus datos</Text>
+            <Input
+                placeholder="Ingresa tu correo"
+                value={email}
+                onChangeText={setEmail}
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                leftIcon={{ type: 'font-awesome', name: 'envelope', color: '#8E44AD' }}
+                autoCapitalize="none"
+                placeholderTextColor="#aaa"
             />
-            <Text style={styles.label}>Contraseña:</Text>
-            <TextInput 
-                style={styles.input} 
-                value={password} 
-                onChangeText={setPassword} 
-                secureTextEntry 
-                placeholder="Ingresa tu contraseña" 
+            <Input
+                placeholder="Ingresa tu contraseña"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                leftIcon={{ type: 'font-awesome', name: 'lock', color: '#8E44AD' }}
+                placeholderTextColor="#aaa"
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Iniciar sesión</Text>
-            </TouchableOpacity>
-
+            <Button
+                title="Iniciar sesión"
+                onPress={handleSubmit}
+                buttonStyle={styles.button}
+                titleStyle={styles.buttonText}
+                icon={<Icon name="sign-in" size={15} color="white" />}
+            />
             <TouchableOpacity style={styles.link} onPress={() => router.push("/RecuperarContrasena")}>
                 <Text style={styles.linkText}>Olvidaste tu contraseña?</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.link} onPress={() => router.push("./usuarios/agregarUsuario")}>
+            <TouchableOpacity style={styles.link} onPress={() => router.push("/usuarios/agregarUsuario")}>
                 <Text style={styles.linkText}>Registra un nuevo usuario</Text>
             </TouchableOpacity>
         </View>
@@ -65,32 +76,25 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
-        backgroundColor: "rgb(80, 112, 210)",
+        backgroundColor: "#222831",
     },
     header: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 30,
-        color: "#fefdfd",
-    },
-    label: {
-        fontSize: 16,
-        color: "#ffffff",
-        alignSelf: "flex-start",
-        marginBottom: 5,
-    },
-    input: {
-        width: "100%",
-        padding: 10,
+        color: "#FFFFFF",
         marginBottom: 20,
+    },
+    inputContainer: {
+        marginBottom: 20,
+        width: "100%",
+        borderBottomWidth: 0,
         borderWidth: 1,
         borderRadius: 10,
-        borderColor: "#ddd",
-        backgroundColor: "#fff",
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
+        borderColor: "#8E44AD",
+        backgroundColor: "#333",
+        paddingHorizontal: 10,
+    },
+    input: {
+        color: "#FFFFFF",
+        padding: 10,
     },
     errorText: {
         color: "red",
@@ -98,22 +102,22 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     button: {
-        backgroundColor: "#17b100",
-        padding: 15,
+        backgroundColor: "#8E44AD",
         borderRadius: 10,
+        marginTop: 20,
         width: "100%",
-        alignItems: "center",
+        paddingVertical: 15,
     },
     buttonText: {
-        color: "#fff",
-        fontSize: 18,
+        color: "#FFFFFF",
         fontWeight: "bold",
+        fontSize: 18,
     },
     link: {
         padding: 10,
     },
     linkText: {
-        color: "#fff",
+        color: "#FFFFFF",
         fontSize: 16,
     },
     icon: {

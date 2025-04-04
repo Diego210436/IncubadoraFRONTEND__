@@ -36,7 +36,7 @@ const EditarSensor = () => {
                 body: JSON.stringify({ nombre, valor: parseFloat(valor), unidad }),
             });
             Alert.alert("Éxito", "Sensor actualizado correctamente");
-            router.push("/"); 
+            router.push("/Sensores"); 
         } catch (error) {
             Alert.alert("Error", "No se pudo actualizar el sensor");
         }
@@ -57,10 +57,10 @@ const EditarSensor = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "#f7f7f7" },
-    title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20, color: "#333" },
+    container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "#222831" },
+    title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20, color: "#FFFFFF" },
     input: { borderWidth: 1, borderColor: "#ccc", padding: 10, marginBottom: 10, borderRadius: 5, width: "100%", backgroundColor: "white" },
-    button: { flexDirection: "row", alignItems: "center", justifyContent: "center", padding: 15, backgroundColor: "#007bff", borderRadius: 5, width: "100%", marginTop: 20 },
+    button: { flexDirection: "row", alignItems: "center", justifyContent: "center", padding: 15, backgroundColor: "#9370DB", borderRadius: 5, width: "100%", marginTop: 20 },
     buttonText: { color: "white", fontWeight: "bold", marginLeft: 10 },
 });
 

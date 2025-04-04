@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Alert, ActivityIndicator, TouchableOpacity } from "react-native";
+import { Input, Text, Button, Icon } from 'react-native-elements';
 import { useRouter } from "expo-router";
 import { Ionicons } from '@expo/vector-icons';
 
 const API_URL = "http://localhost:3001/users";
 
-const AgregarUsuario = () => {
+const AgregarUsuario: React.FC = () => {
     const [nombre, setNombre] = useState("");
     const [apellidoP, setApellidoP] = useState("");
     const [apellidoM, setApellidoM] = useState("");
@@ -50,24 +51,68 @@ const AgregarUsuario = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Ionicons name="person-add" size={64} color="#007BFF" style={styles.icon} />
-                <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/Home")}> 
-                    <Ionicons name="home" size={32} color="#007BFF" />
+                <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/")}>
+                    <Ionicons name="home" size={32} color="#9370DB" />
                 </TouchableOpacity>
             </View>
-            <Text style={styles.title}>Agregar Usuario</Text>
-            <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Nombre" />
-            <TextInput style={styles.input} value={apellidoP} onChangeText={setApellidoP} placeholder="Apellido Paterno" />
-            <TextInput style={styles.input} value={apellidoM} onChangeText={setApellidoM} placeholder="Apellido Materno" />
-            <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Correo Electrónico" keyboardType="email-address" />
-            <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Contraseña" secureTextEntry />
+            <Text h3 style={styles.title}>Agregar Usuario</Text>
+            <Input
+                placeholder="Nombre"
+                value={nombre}
+                onChangeText={setNombre}
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }}
+                placeholderTextColor="#aaa"
+            />
+            <Input
+                placeholder="Apellido Paterno"
+                value={apellidoP}
+                onChangeText={setApellidoP}
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }}
+                placeholderTextColor="#aaa"
+            />
+            <Input
+                placeholder="Apellido Materno"
+                value={apellidoM}
+                onChangeText={setApellidoM}
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }}
+                placeholderTextColor="#aaa"
+            />
+            <Input
+                placeholder="Correo Electrónico"
+                value={email}
+                onChangeText={setEmail}
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                leftIcon={{ type: 'font-awesome', name: 'envelope', color: '#8E44AD' }}
+                keyboardType="email-address"
+                placeholderTextColor="#aaa"
+            />
+            <Input
+                placeholder="Contraseña"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                leftIcon={{ type: 'font-awesome', name: 'lock', color: '#8E44AD' }}
+                placeholderTextColor="#aaa"
+            />
             {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="#8E44AD" />
             ) : (
-                <TouchableOpacity style={styles.button} onPress={handleAgregar}>
-                    <Ionicons name="checkmark-circle" size={24} color="white" />
-                    <Text style={styles.buttonText}>Agregar Usuario</Text>
-                </TouchableOpacity>
+                <Button
+                    title="Agregar Usuario"
+                    onPress={handleAgregar}
+                    buttonStyle={styles.button}
+                    titleStyle={styles.buttonText}
+                    icon={<Icon name="checkmark-circle" size={24} color="white" />}
+                />
             )}
         </View>
     );
@@ -76,9 +121,10 @@ const AgregarUsuario = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        backgroundColor: "#f0f4f8",
+        justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#222831",
+        padding: 20,
     },
     header: {
         flexDirection: "row",
@@ -88,40 +134,38 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginBottom: 10,
     },
-    icon: {
-        marginBottom: 10,
-    },
     homeButton: {
         padding: 10,
     },
     title: {
-        fontSize: 26,
-        fontWeight: "bold",
-        color: "#333",
+        color: "#FFFFFF",
         marginBottom: 20,
     },
-    input: {
-        width: "90%",
+    inputContainer: {
+        marginBottom: 20,
+        width: "100%",
+        borderBottomWidth: 0,
         borderWidth: 1,
-        padding: 12,
-        marginBottom: 10,
-        borderRadius: 8,
-        borderColor: "#ccc",
-        backgroundColor: "#fff",
+        borderRadius: 10,
+        borderColor: "#8E44AD",
+        backgroundColor: "#333",
+        paddingHorizontal: 10,
+    },
+    input: {
+        color: "#FFFFFF",
+        padding: 10,
     },
     button: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#007BFF",
-        padding: 15,
-        borderRadius: 8,
-        width: "90%",
+        backgroundColor: "#8E44AD",
+        borderRadius: 10,
+        marginTop: 20,
+        width: "100%",
+        paddingVertical: 15,
     },
     buttonText: {
-        color: "white",
+        color: "#FFFFFF",
+        fontWeight: "bold",
         fontSize: 18,
-        marginLeft: 10,
     },
 });
 

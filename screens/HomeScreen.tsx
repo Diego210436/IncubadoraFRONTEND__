@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Modal, ScrollView, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { LineChart, PieChart, BarChart, ProgressChart } from "react-native-chart-kit"; // Import additional charts
+import { LineChart, PieChart, BarChart, ProgressChart } from "react-native-chart-kit";
+import { Card, Icon, Button } from 'react-native-elements';
 import { getSensorRecords } from "../services/api";
 
 export default function HomeScreen() {
@@ -63,7 +64,7 @@ export default function HomeScreen() {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <TouchableOpacity style={styles.menuButton} onPress={() => setMenuVisible(!menuVisible)}>
-                <Text style={styles.menuButtonText}>☰ Menú</Text>
+                <Icon name="menu" type="font-awesome" size={40} color="#fff" />
             </TouchableOpacity>
 
             {menuVisible && (
@@ -85,15 +86,14 @@ export default function HomeScreen() {
 
             <Text style={styles.title}>🏠 Bienvenido a la Incubadora</Text>
             <Text style={styles.subtitle}>Aquí puedes ver información general y navegar a otras secciones.</Text>
-            <View style={styles.card}>
+            <Card containerStyle={styles.card}>
                 <TouchableOpacity onPress={() => router.push("/agregar")}>
                     <Text style={styles.addButton}>+ Agregar Sensor</Text>
                 </TouchableOpacity>
-
                 <Text style={styles.cardText}>📡 Sensores Activos: 2</Text>
                 <Text style={styles.cardText}>👥 Usuarios Registrados: --</Text>
                 <Text style={styles.cardText}>📊 Última Actualización: 10 minutos</Text>
-            </View>
+            </Card>
 
             <Text style={styles.chartTitle}>📊 Actividad de Sensores</Text>
             <TouchableOpacity onPress={() => openModal('Datos de la actividad de los sensores')}>
@@ -197,15 +197,15 @@ export default function HomeScreen() {
                 />
             </TouchableOpacity>
 
-            <View style={styles.profileCard}>
+            <Card containerStyle={styles.profileCard}>
                 <Image source={{ uri: 'https://example.com/profile.jpg' }} style={styles.profileImage} />
                 <Text style={styles.profileTitle}>👤 Perfil de Usuario</Text>
                 <Text style={styles.profileText}>Nombre: Diego</Text>
                 <Text style={styles.profileText}>Correo: diego@example.com</Text>
                 <Text style={styles.profileText}>Último inicio de sesión: Hace 2 horas</Text>
-            </View>
+            </Card>
 
-            <View style={styles.notificationsCard}>
+            <Card containerStyle={styles.notificationsCard}>
                 <Text style={styles.notificationsTitle}>🔔 Notificaciones</Text>
                 <View style={styles.notificationItem}>
                     <Text style={styles.notificationText}>🔧 Mantenimiento programado para mañana.</Text>
@@ -213,7 +213,7 @@ export default function HomeScreen() {
                 <View style={styles.notificationItem}>
                     <Text style={styles.notificationText}>📊 Nuevo informe de sensores disponible.</Text>
                 </View>
-            </View>
+            </Card>
 
             <Modal
                 animationType="fade"
@@ -226,9 +226,12 @@ export default function HomeScreen() {
                         {modalContent.map((word, index) => (
                             <Text key={index}>{word}</Text>
                         ))}
-                        <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                            <Text style={styles.closeButtonText}>Cerrar</Text>
-                        </TouchableOpacity>
+                        <Button
+                            title="Cerrar"
+                            onPress={closeModal}
+                            buttonStyle={styles.closeButton}
+                            titleStyle={styles.closeButtonText}
+                        />
                     </View>
                 </View>
             </Modal>
@@ -241,26 +244,22 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f4f4f4",
+        backgroundColor: "#222831",
         padding: 20,
     },
     menuButton: {
         position: "absolute",
         top: 40,
         left: 20,
-        backgroundColor: "#007AFF",
+        backgroundColor: "#8E44AD",
         padding: 10,
         borderRadius: 5,
-    },
-    menuButtonText: {
-        color: "#fff",
-        fontSize: 18,
     },
     menu: {
         position: "absolute",
         top: 80,
         left: 20,
-        backgroundColor: "white",
+        backgroundColor: "#fff",
         padding: 15,
         borderRadius: 5,
         shadowColor: "#000",
@@ -271,37 +270,38 @@ const styles = StyleSheet.create({
     menuItem: {
         fontSize: 16,
         paddingVertical: 5,
+        color: "#333",
     },
     title: {
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 10,
+        color: "#fefdfd",
     },
     subtitle: {
         fontSize: 16,
-        color: "gray",
+        color: "#fefdfd",
         textAlign: "center",
         marginBottom: 20,
     },
     card: {
-        backgroundColor: "#fff",
+        backgroundColor: "#333",
         padding: 15,
         borderRadius: 10,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-        marginBottom: 20,
         width: "80%",
+        marginBottom: 20,
     },
     cardText: {
         fontSize: 16,
         fontWeight: "bold",
+        color: "#fff",
     },
     chartTitle: {
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
+        color: "#fefdfd",
+        textAlign: "center",
     },
     chart: {
         marginVertical: 8,
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     addButton: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#007AFF",
+        color: "#8E44AD",
         textAlign: "center",
         marginVertical: 10,
     },
@@ -320,16 +320,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     profileCard: {
-        backgroundColor: "#fff",
+        backgroundColor: "#333",
         padding: 15,
         borderRadius: 10,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-        marginBottom: 20,
         width: "80%",
         alignItems: "center",
+        marginBottom: 20,
     },
     profileImage: {
         width: 80,
@@ -341,36 +337,33 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
+        color: "#fff",
     },
     profileText: {
         fontSize: 16,
-        fontWeight: "bold",
+        color: "#fff",
     },
     notificationsCard: {
-        backgroundColor: "#fff",
+        backgroundColor: "#333",
         padding: 15,
         borderRadius: 10,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-        marginBottom: 20,
         width: "80%",
     },
     notificationsTitle: {
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
+        color: "#fff",
     },
     notificationItem: {
-        backgroundColor: "#f9f9f9",
+        backgroundColor: "#444",
         padding: 10,
         borderRadius: 5,
         marginBottom: 5,
     },
     notificationText: {
         fontSize: 16,
-        fontWeight: "bold",
+        color: "#fff",
     },
     modalContainer: {
         flex: 1,
@@ -379,24 +372,23 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalContent: {
-        backgroundColor: "white",
+        backgroundColor: "#333",
         padding: 20,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOpacity: 0.2,
         shadowRadius: 5,
         elevation: 5,
-        width: "50%",
+        width: "80%",
     },
     closeButton: {
-        backgroundColor: "#007AFF",
-        padding: 10,
-        borderRadius: 5,
+        backgroundColor: "#8E44AD",
+        borderRadius: 10,
         marginTop: 10,
-        alignSelf: "center",
     },
     closeButtonText: {
         color: "#fff",
         fontSize: 16,
+        fontWeight: "bold",
     }
 });
