@@ -87,6 +87,7 @@ export default function HomeScreen() {
             <Text style={styles.title}>🏠 Bienvenido a la Incubadora</Text>
             <Text style={styles.subtitle}>Aquí puedes ver información general y navegar a otras secciones.</Text>
             <Card containerStyle={styles.card}>
+                <Card.Divider />
                 <TouchableOpacity onPress={() => router.push("/agregar")}>
                     <Text style={styles.addButton}>+ Agregar Sensor</Text>
                 </TouchableOpacity>
