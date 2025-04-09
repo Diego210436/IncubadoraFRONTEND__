@@ -78,6 +78,9 @@ export default function HomeScreen() {
                     <TouchableOpacity onPress={() => router.push("/usuarios/listarUsuario")}>
                         <Text style={styles.menuItem}>👥 Usuarios</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push("/Interactuar")}>
+                    <Text style={styles.menuItem}>🎮 Interactuar</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={logoutUser}>
                         <Text style={styles.menuItem}>🚪 Cerrar sesión</Text>
                     </TouchableOpacity>
@@ -180,7 +183,7 @@ export default function HomeScreen() {
                 <ProgressChart
                     data={{
                         labels: ["Tarea 1", "Tarea 2", "Tarea 3"],
-                        data: [0.4, 0.6, 0.8]
+                        data: [0.10, 0.6, 0.8]
                     }}
                     width={Dimensions.get("window").width * 0.9}
                     height={220}
