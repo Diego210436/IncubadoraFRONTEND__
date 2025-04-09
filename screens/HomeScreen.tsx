@@ -64,7 +64,7 @@ export default function HomeScreen() {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <TouchableOpacity style={styles.menuButton} onPress={() => setMenuVisible(!menuVisible)}>
-                <Icon name="menu" type="font-awesome" size={40} color="#fff" />
+                <Icon name="bars" type="font-awesome" size={40} color="#fff" />
             </TouchableOpacity>
 
             {menuVisible && (
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
-        color: "#fefdfd",
+        color: "#FFFFFF",
         textAlign: "center",
     },
     chart: {

@@ -51,7 +51,7 @@ const AgregarUsuario: React.FC = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/")}>
+                <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/usuarios/listarUsuario")}>
                     <Ionicons name="home" size={32} color="#9370DB" />
                 </TouchableOpacity>
             </View>

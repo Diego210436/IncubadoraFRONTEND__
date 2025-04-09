@@ -79,8 +79,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#222831",
     },
     header: {
-        color: "#FFFFFF",
+        color: "#FFFFFF", // Mejor contraste si el fondo es claro
         marginBottom: 20,
+        fontSize: 28,
+        fontWeight: "bold",
+        fontFamily: "Poppins_600SemiBold", // Cambia esto según tu fuente instalada
+        textAlign: "center",
+        letterSpacing: 1,
     },
     inputContainer: {
         marginBottom: 20,
