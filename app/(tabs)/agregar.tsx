@@ -29,9 +29,9 @@ const AgregarSensor: React.FC = () => {
         const newSensor: Sensor = {
             tipo,
             nombre,
-            valor: parseFloat(valor), // Convertir a número
+            valor: parseFloat(valor),
             unidad,
-            fechaHora: new Date().toISOString(), // Fecha actual
+            fechaHora: new Date().toISOString(),
         };
 
         try {
@@ -44,7 +44,7 @@ const AgregarSensor: React.FC = () => {
             if (!response.ok) throw new Error("Error al agregar el sensor");
 
             Alert.alert("Éxito", "Sensor agregado correctamente");
-            router.push("/Sensores"); // Redirigir a la lista de sensores
+            router.push("/Sensores");
         } catch (error) {
             Alert.alert("Error", "No se pudo agregar el sensor");
         }
@@ -96,6 +96,16 @@ const AgregarSensor: React.FC = () => {
                 buttonStyle={styles.button}
                 titleStyle={styles.buttonText}
                 icon={<Icon name="plus" size={15} color="white" />}
+            />
+
+            {/* Botón pequeño para volver al Home */}
+            <Button
+                title="Volver al Home"
+                type="clear"
+                titleStyle={{ color: "#8E44AD", fontSize: 14 }}
+                onPress={() => router.push("/Home")}
+                icon={{ name: "home", color: "#8E44AD", size: 16 }}
+                containerStyle={{ marginTop: 10, alignSelf: "center" }}
             />
         </View>
     );
