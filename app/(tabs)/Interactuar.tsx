@@ -9,7 +9,7 @@ export default function Interactuar() {
     const enviarSenal = async (accion: string) => {
         try {
             // Reemplazá esta URL con tu endpoint real
-            const response = await axios.post("https://tuservidor.com/api/control", {
+            const response = await axios.post("https://localhost:3001/api/control", {
                 accion
             });
             Alert.alert("✅ Señal enviada", `Acción: ${accion}`);

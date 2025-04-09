@@ -48,9 +48,15 @@ const EditarSensor = () => {
             <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Nombre" />
             <TextInput style={styles.input} value={valor} onChangeText={setValor} keyboardType="numeric" placeholder="Valor" />
             <TextInput style={styles.input} value={unidad} onChangeText={setUnidad} placeholder="Unidad" />
+
             <TouchableOpacity style={styles.button} onPress={handleEditar}>
                 <MaterialIcons name="save" size={24} color="white" />
                 <Text style={styles.buttonText}>Guardar Cambios</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.cancelButton} onPress={() => router.push("/Sensores")}>
+                <MaterialIcons name="cancel" size={24} color="white" />
+                <Text style={styles.buttonText}>Cancelar</Text>
             </TouchableOpacity>
         </View>
     );
@@ -59,9 +65,40 @@ const EditarSensor = () => {
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "#222831" },
     title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20, color: "#FFFFFF" },
-    input: { borderWidth: 1, borderColor: "#ccc", padding: 10, marginBottom: 10, borderRadius: 5, width: "100%", backgroundColor: "white" },
-    button: { flexDirection: "row", alignItems: "center", justifyContent: "center", padding: 15, backgroundColor: "#9370DB", borderRadius: 5, width: "100%", marginTop: 20 },
-    buttonText: { color: "white", fontWeight: "bold", marginLeft: 10 },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        padding: 10,
+        marginBottom: 10,
+        borderRadius: 5,
+        width: "100%",
+        backgroundColor: "white"
+    },
+    button: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 15,
+        backgroundColor: "#9370DB",
+        borderRadius: 5,
+        width: "100%",
+        marginTop: 20,
+    },
+    cancelButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 15,
+        backgroundColor: "Gray",
+        borderRadius: 5,
+        width: "100%",
+        marginTop: 10,
+    },
+    buttonText: {
+        color: "white",
+        fontWeight: "bold",
+        marginLeft: 10,
+    },
 });
 
 export default EditarSensor;
