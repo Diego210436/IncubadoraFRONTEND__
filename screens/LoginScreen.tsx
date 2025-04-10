@@ -4,7 +4,7 @@ import { Input, Text, Button, Icon } from 'react-native-elements';
 import { useRouter } from "expo-router";
 
 interface LoginScreenProps {
-    onLogin: (email: string, password: string) => Promise<void>;
+    onLogin: (email: string, password: string) => Promise<string>;
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
@@ -15,8 +15,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
     const handleSubmit = async () => {
         try {
-            await onLogin(email, password);
-            router.push("/(tabs)/Home"); // Redirige a Home después del login
+            const token = await onLogin(email, password);
+
+            if (!token || token === "undefined") {
+                setError("Token inválido. No se pudo iniciar sesión.");
+                return;
+            }
+
+            // ✅ Ya se guarda el token en Login.tsx, así que aquí solo redirigimos
+            router.push("/(tabs)/Home");
         } catch (err) {
             setError("Error al iniciar sesión");
         }
@@ -29,9 +36,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 style={styles.icon}
                 resizeMode="contain"
             />
-
             <Text h3 style={styles.header}>Bienvenido</Text>
             <Text h4 style={styles.header}>Ingresa tus datos</Text>
+
             <Input
                 placeholder="Ingresa tu correo"
                 value={email}
@@ -53,6 +60,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 placeholderTextColor="#aaa"
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
             <Button
                 title="Iniciar sesión"
                 onPress={handleSubmit}
@@ -60,6 +68,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 titleStyle={styles.buttonText}
                 icon={<Icon name="sign-in" size={15} color="white" />}
             />
+
             <TouchableOpacity style={styles.link} onPress={() => router.push("/RecuperarContrasena")}>
                 <Text style={styles.linkText}>Olvidaste tu contraseña?</Text>
             </TouchableOpacity>
@@ -79,11 +88,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#222831",
     },
     header: {
-        color: "#FFFFFF", // Mejor contraste si el fondo es claro
+        color: "#FFFFFF",
         marginBottom: 20,
         fontSize: 28,
         fontWeight: "bold",
-        fontFamily: "Poppins_600SemiBold", // Cambia esto según tu fuente instalada
+        fontFamily: "Poppins_600SemiBold",
         textAlign: "center",
         letterSpacing: 1,
     },

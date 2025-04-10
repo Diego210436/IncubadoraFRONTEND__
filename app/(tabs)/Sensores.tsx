@@ -46,7 +46,7 @@ const SensorItem = ({ item }: { item: any }) => {
 
     return (
         <GestureDetector gesture={gesture}>
-            <Animated.View style={[styles.card, animatedStyle]}>
+            <Animated.View style={[styles.card, animatedStyle, { position: 'relative' }]}>
                 <Text style={styles.tipo}>{item.tipo}</Text>
                 <Text style={styles.nombre}>{item.nombre}</Text>
                 <Text style={styles.valor}>{item.valor} {item.unidad}</Text>
@@ -137,16 +137,21 @@ const styles = StyleSheet.create({
         color: "#FFFFFF",
     },
     card: {
-        backgroundColor: "#333",
-        padding: 20,
+        backgroundColor: "rgba(255,255,255,0.05)",
+        paddingVertical: 10,
+        paddingHorizontal: 14,
         borderRadius: 10,
         marginBottom: 10,
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.1)",
         shadowColor: "#000",
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 3 },
-        shadowRadius: 5,
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
         elevation: 3,
+        position: "relative", // 👈 para el menú flotante
     },
+    
     tipo: {
         fontSize: 18,
         fontWeight: "bold",
@@ -167,11 +172,13 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     menu: {
-        marginTop: 10,
-        backgroundColor: "#444",
-        borderRadius: 5,
-        padding: 10,
-    },
+        position: 'absolute',
+        right: 10,
+        top: '50%',
+        transform: [{ translateY: -20 }],
+        flexDirection: 'row',
+        gap: 10,
+    },       
     menuItem: {
         fontSize: 14,
         padding: 5,
@@ -192,6 +199,18 @@ const styles = StyleSheet.create({
         color: "#AAAAAA",
         marginTop: 20,
     },
+    iconButton: {
+        padding: 8,
+        backgroundColor: "#9C27B0", // morado vibrante
+        borderRadius: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 2,
+    },    
+    cardContent: {
+        flexDirection: "column",
+        gap: 2,
+    },  
 });
 
 export default Sensores;

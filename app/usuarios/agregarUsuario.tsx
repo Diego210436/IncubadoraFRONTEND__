@@ -40,7 +40,9 @@ const AgregarUsuario: React.FC = () => {
             if (!response.ok) throw new Error("Error al agregar el usuario");
 
             Alert.alert("✅ Éxito", "Usuario agregado correctamente");
-            router.push({ pathname: "/usuarios/listarUsuario" });
+
+            // Redirigir al login
+            router.push("/Login");
         } catch (error) {
             Alert.alert("❌ Error", "No se pudo agregar el usuario");
         } finally {
@@ -56,63 +58,15 @@ const AgregarUsuario: React.FC = () => {
                 </TouchableOpacity>
             </View>
             <Text h3 style={styles.title}>Agregar Usuario</Text>
-            <Input
-                placeholder="Nombre"
-                value={nombre}
-                onChangeText={setNombre}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
-            />
-            <Input
-                placeholder="Apellido Paterno"
-                value={apellidoP}
-                onChangeText={setApellidoP}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
-            />
-            <Input
-                placeholder="Apellido Materno"
-                value={apellidoM}
-                onChangeText={setApellidoM}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
-            />
-            <Input
-                placeholder="Correo Electrónico"
-                value={email}
-                onChangeText={setEmail}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'envelope', color: '#8E44AD' }}
-                keyboardType="email-address"
-                placeholderTextColor="#aaa"
-            />
-            <Input
-                placeholder="Contraseña"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'lock', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
-            />
+            <Input placeholder="Nombre" value={nombre} onChangeText={setNombre} inputContainerStyle={styles.inputContainer} inputStyle={styles.input} leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }} placeholderTextColor="#aaa" />
+            <Input placeholder="Apellido Paterno" value={apellidoP} onChangeText={setApellidoP} inputContainerStyle={styles.inputContainer} inputStyle={styles.input} leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }} placeholderTextColor="#aaa" />
+            <Input placeholder="Apellido Materno" value={apellidoM} onChangeText={setApellidoM} inputContainerStyle={styles.inputContainer} inputStyle={styles.input} leftIcon={{ type: 'font-awesome', name: 'user', color: '#8E44AD' }} placeholderTextColor="#aaa" />
+            <Input placeholder="Correo Electrónico" value={email} onChangeText={setEmail} inputContainerStyle={styles.inputContainer} inputStyle={styles.input} leftIcon={{ type: 'font-awesome', name: 'envelope', color: '#8E44AD' }} keyboardType="email-address" placeholderTextColor="#aaa" />
+            <Input placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry inputContainerStyle={styles.inputContainer} inputStyle={styles.input} leftIcon={{ type: 'font-awesome', name: 'lock', color: '#8E44AD' }} placeholderTextColor="#aaa" />
             {loading ? (
                 <ActivityIndicator size="large" color="#8E44AD" />
             ) : (
-                <Button
-                    title="Agregar Usuario"
-                    onPress={handleAgregar}
-                    buttonStyle={styles.button}
-                    titleStyle={styles.buttonText}
-                    icon={<Icon name="checkmark-circle" size={24} color="white" />}
-                />
+                <Button title="Agregar Usuario" onPress={handleAgregar} buttonStyle={styles.button} titleStyle={styles.buttonText} icon={<Icon name="checkmark-circle" size={24} color="white" />} />
             )}
         </View>
     );

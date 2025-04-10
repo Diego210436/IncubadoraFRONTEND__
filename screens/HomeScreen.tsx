@@ -14,7 +14,7 @@ export default function HomeScreen() {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState<string[]>([]);
 
-    const logoutUser = async () => {
+    const  logoutUser = async () => {
         await AsyncStorage.removeItem("userToken");
         console.log("🚪 Sesión cerrada. Token eliminado.");
         router.replace("/Login");
@@ -25,6 +25,8 @@ export default function HomeScreen() {
             const token = await AsyncStorage.getItem("userToken");
             if (!token) {
                 throw new Error("No se encontró el token de usuario.");
+                  // ✅ Ya se guarda el token en Login.tsx, así que aquí solo redirigimos
+                router.replace("/Login");
             }
             const data = await getSensorRecords(token);
             const labels = data.map((item: any) => item.nombre);
@@ -89,6 +91,8 @@ export default function HomeScreen() {
 
             <Text style={styles.title}>🏠 Bienvenido a la Incubadora</Text>
             <Text style={styles.subtitle}>Aquí puedes ver información general y navegar a otras secciones.</Text>
+            
+            <ScrollView horizontal>
             <Card containerStyle={styles.card}>
                 <Card.Divider />
                 <TouchableOpacity onPress={() => router.push("/agregar")}>
@@ -98,7 +102,7 @@ export default function HomeScreen() {
                 <Text style={styles.cardText}>👥 Usuarios Registrados: --</Text>
                 <Text style={styles.cardText}>📊 Última Actualización: 10 minutos</Text>
             </Card>
-
+            </ScrollView>
             <Text style={styles.chartTitle}>📊 Actividad de Sensores</Text>
             <TouchableOpacity onPress={() => openModal('Datos de la actividad de los sensores')}>
                 <LineChart

@@ -35,7 +35,7 @@ const EliminarSensor = () => {
                             <MaterialIcons name="delete" size={24} color="white" />
                             <Text style={styles.buttonText}>Eliminar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, styles.buttonCancelar]} onPress={() => setModalVisible(false)}>
+                        <TouchableOpacity style={[styles.button, styles.buttonCancelar]} onPress={() => router.push("/Sensores")}                        >
                             <MaterialIcons name="cancel" size={24} color="white" />
                             <Text style={styles.buttonText}>Cancelar</Text>
                         </TouchableOpacity>
