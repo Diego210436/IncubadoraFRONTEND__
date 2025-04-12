@@ -8,7 +8,7 @@ export default function Interactuar() {
 
     const enviarSenal = async (accion: string) => {
         try {
-            // Reemplazá esta URL con tu endpoint real
+            // URL API 
             const response = await axios.post("https://localhost:3001/api/control", {
                 accion
             });
@@ -34,7 +34,7 @@ export default function Interactuar() {
                 style={styles.button}
                 onPress={() => enviarSenal("mover_servomotor")}
             >
-                <Text style={styles.buttonText}>⚙️ Mover Servomotor</Text>
+                <Text style={styles.buttonText}>⚙️Abrir Servomotor</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

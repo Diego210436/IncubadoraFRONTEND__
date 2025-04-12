@@ -7,7 +7,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     ActivityIndicator,
-    Alert
 } from "react-native";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -46,7 +45,7 @@ const SensorItem = ({ item }: { item: any }) => {
 
     return (
         <GestureDetector gesture={gesture}>
-            <Animated.View style={[styles.card, animatedStyle, { position: 'relative' }]}>
+            <Animated.View style={[styles.card, animatedStyle]}>
                 <Text style={styles.tipo}>{item.tipo}</Text>
                 <Text style={styles.nombre}>{item.nombre}</Text>
                 <Text style={styles.valor}>{item.valor} {item.unidad}</Text>
@@ -78,6 +77,7 @@ const Sensores = () => {
 
     const [sensores, setSensores] = useState<Sensor[]>([]);
     const [loading, setLoading] = useState(true);
+    const [filtro, setFiltro] = useState<"Todos" | "Sensor" | "Actuador">("Todos");
     const router = useRouter();
 
     const fetchSensores = async () => {
@@ -86,8 +86,6 @@ const Sensores = () => {
             if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
 
             const data = await response.json();
-            console.log("📡 Datos recibidos:", data);
-
             setSensores(Array.isArray(data) ? data : data.sensores || []);
         } catch (error) {
             console.error("❌ Error al obtener sensores:", error);
@@ -100,18 +98,57 @@ const Sensores = () => {
         fetchSensores();
     }, []);
 
+    const sensoresFiltrados = sensores.filter((s) => {
+        if (filtro === "Todos") return true;
+        return s.tipo.toLowerCase() === filtro.toLowerCase();
+    });
+
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity onPress={() => router.push("/Home")}>
                     <Text style={styles.homeIcon}>🏠</Text>
                 </TouchableOpacity>
+
                 <Text style={styles.title}>Registros de Sensores y Actuadores</Text>
+
+                <View style={styles.filtroContainer}>
+                    <TouchableOpacity
+                        style={[
+                            styles.filtroButton,
+                            filtro === "Sensor" && styles.filtroActivo,
+                        ]}
+                        onPress={() => setFiltro("Sensor")}
+                    >
+                        <Text style={styles.filtroButtonText}>Sensor</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[
+                            styles.filtroButton,
+                            filtro === "Actuador" && styles.filtroActivo,
+                        ]}
+                        onPress={() => setFiltro("Actuador")}
+                    >
+                        <Text style={styles.filtroButtonText}>Actuador</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[
+                            styles.filtroButton,
+                            filtro === "Todos" && styles.filtroActivo,
+                        ]}
+                        onPress={() => setFiltro("Todos")}
+                    >
+                        <Text style={styles.filtroButtonText}>Todos</Text>
+                    </TouchableOpacity>
+                </View>
+
                 {loading ? (
                     <ActivityIndicator size="large" color="#1E88E5" />
-                ) : sensores.length > 0 ? (
+                ) : sensoresFiltrados.length > 0 ? (
                     <FlatList
-                        data={sensores}
+                        data={sensoresFiltrados}
                         keyExtractor={(item) => item._id}
                         renderItem={({ item }) => <SensorItem item={item} />}
                     />
@@ -149,9 +186,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 4,
         elevation: 3,
-        position: "relative", // 👈 para el menú flotante
+        position: "relative",
     },
-    
     tipo: {
         fontSize: 18,
         fontWeight: "bold",
@@ -178,7 +214,7 @@ const styles = StyleSheet.create({
         transform: [{ translateY: -20 }],
         flexDirection: 'row',
         gap: 10,
-    },       
+    },
     menuItem: {
         fontSize: 14,
         padding: 5,
@@ -199,18 +235,25 @@ const styles = StyleSheet.create({
         color: "#AAAAAA",
         marginTop: 20,
     },
-    iconButton: {
-        padding: 8,
-        backgroundColor: "#9C27B0", // morado vibrante
-        borderRadius: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        elevation: 2,
-    },    
-    cardContent: {
-        flexDirection: "column",
-        gap: 2,
-    },  
+    filtroContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginBottom: 15,
+    },
+    filtroButton: {
+        backgroundColor: "#1E88E5",
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 20,
+    },
+    filtroButtonText: {
+        color: "#FFFFFF",
+        fontWeight: "bold",
+        fontSize: 14,
+    },
+    filtroActivo: {
+        backgroundColor: "#43A047",
+    },
 });
 
 export default Sensores;
