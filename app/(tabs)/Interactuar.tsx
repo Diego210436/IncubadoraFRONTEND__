@@ -5,14 +5,35 @@ import { useRouter } from "expo-router";
 export default function Interactuar() {
     const router = useRouter();
     const [mensajeJSON, setMensajeJSON] = useState<string | null>(null);
+    const [focoEncendido, setFocoEncendido] = useState(false);
+    const [servoAbierto, setServoAbierto] = useState(false);
 
-    const enviarSenal = (accion: string) => {
+    const obtenerFechaHoraActual = () => {
+        const ahora = new Date();
+        return ahora.toLocaleString(); // formato: dd/mm/yyyy hh:mm:ss
+    };
+
+    const enviarSenal = (dispositivo: "foco" | "servomotor") => {
+        let accion = "";
+        let nuevoEstado = "";
+
+        if (dispositivo === "foco") {
+            accion = focoEncendido ? "apagar_foco" : "encender_foco";
+            nuevoEstado = focoEncendido ? "Apagar Foco" : "Encender Foco";
+            setFocoEncendido(!focoEncendido);
+        } else if (dispositivo === "servomotor") {
+            accion = servoAbierto ? "cerrar_servomotor" : "abrir_servomotor";
+            nuevoEstado = servoAbierto ? "Cerrar Servomotor" : "Abrir Servomotor";
+            setServoAbierto(!servoAbierto);
+        }
+
         const jsonSimulado = {
-            mensaje: `Envío al backend http://localhost:3001/`,
-            accion: accion,
+            mensaje: "Envío al backend http://localhost:3001/",
+            accion,
+            fechaHora: obtenerFechaHoraActual(),
         };
 
-        setMensajeJSON(JSON.stringify(jsonSimulado, null, 2)); 
+        setMensajeJSON(JSON.stringify(jsonSimulado, null, 2));
     };
 
     return (
@@ -21,16 +42,20 @@ export default function Interactuar() {
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => enviarSenal("prender_foco")}
+                onPress={() => enviarSenal("foco")}
             >
-                <Text style={styles.buttonText}>💡 Prender Foco</Text>
+                <Text style={styles.buttonText}>
+                    💡 {focoEncendido ? "Apagar Foco" : "Encender Foco"}
+                </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => enviarSenal("mover_servomotor")}
+                onPress={() => enviarSenal("servomotor")}
             >
-                <Text style={styles.buttonText}>⚙️ Abrir Servomotor</Text>
+                <Text style={styles.buttonText}>
+                    ⚙️ {servoAbierto ? "Cerrar Servomotor" : "Abrir Servomotor"}
+                </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
