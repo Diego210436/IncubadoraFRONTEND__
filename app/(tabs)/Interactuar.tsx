@@ -1,26 +1,22 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import axios from "axios";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function Interactuar() {
     const router = useRouter();
+    const [mensajeJSON, setMensajeJSON] = useState<string | null>(null);
 
-    const enviarSenal = async (accion: string) => {
-        try {
-            // URL API 
-            const response = await axios.post("https://localhost:3001/api/control", {
-                accion
-            });
-            Alert.alert("✅ Señal enviada", `Acción: ${accion}`);
-        } catch (error) {
-            console.error(error);
-            Alert.alert("❌ Error", "No se pudo enviar la señal.");
-        }
+    const enviarSenal = (accion: string) => {
+        const jsonSimulado = {
+            mensaje: `Envío al backend http://localhost:3001/`,
+            accion: accion,
+        };
+
+        setMensajeJSON(JSON.stringify(jsonSimulado, null, 2)); 
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>🎮 Panel de Interacción</Text>
 
             <TouchableOpacity
@@ -34,7 +30,7 @@ export default function Interactuar() {
                 style={styles.button}
                 onPress={() => enviarSenal("mover_servomotor")}
             >
-                <Text style={styles.buttonText}>⚙️Abrir Servomotor</Text>
+                <Text style={styles.buttonText}>⚙️ Abrir Servomotor</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -43,15 +39,20 @@ export default function Interactuar() {
             >
                 <Text style={styles.buttonText}>🔙 Volver al Inicio</Text>
             </TouchableOpacity>
-        </View>
+
+            {mensajeJSON && (
+                <View style={styles.jsonBox}>
+                    <Text style={styles.jsonText}>{mensajeJSON}</Text>
+                </View>
+            )}
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: "#222831",
-        justifyContent: "center",
         alignItems: "center",
         padding: 20,
     },
@@ -78,5 +79,19 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 18,
         fontWeight: "bold",
+    },
+    jsonBox: {
+        backgroundColor: "#111",
+        padding: 15,
+        marginTop: 30,
+        width: "90%",
+        borderRadius: 10,
+        borderColor: "#00FF9F",
+        borderWidth: 1,
+    },
+    jsonText: {
+        color: "#00FF9F",
+        fontFamily: "monospace",
+        fontSize: 14,
     },
 });

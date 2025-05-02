@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mensaje</title>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #00ff88;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="mensaje">Cargando mensaje...</div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get("data");
+
+    try {
+      const json = JSON.parse(decodeURIComponent(data));
+      const mensaje = { mensaje: `enviando señal: ${json.accion}` };
+      document.getElementById("mensaje").textContent = JSON.stringify(mensaje, null, 2);
+    } catch (e) {
+      document.getElementById("mensaje").textContent = "❌ Error al leer los datos.";
+    }
+  </script>
+</body>
+</html>
