@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, StyleSheet } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
 const API_URL = "http://localhost:3001/users";
 
 const EditarUsuario = () => {
-    const { id } = useLocalSearchParams();
+    const { id } = useLocalSearchParams(); // Obtener el ID de la URL
     const router = useRouter();
 
     const [usuario, setUsuario] = useState({
@@ -15,23 +15,47 @@ const EditarUsuario = () => {
         email: "",
     });
 
+    const [loading, setLoading] = useState(true);
+
+    // Verificar el ID recibido
+    console.log("ID recibido:", id);
+
+    // Cargar los datos del usuario cuando el ID cambie
     useEffect(() => {
-        if (!id) return;
+        if (!id) return; // Si no hay id, no hacer nada
 
         const fetchUsuario = async () => {
             try {
                 const response = await fetch(`${API_URL}/${id}`);
                 if (!response.ok) throw new Error("Usuario no encontrado");
+
                 const data = await response.json();
-                console.log("Datos del usuario:", data);
-                setUsuario(data);
+                console.log("Datos del usuario recibidos:", data); // Ver los datos recibidos
+
+                if (data) {
+                    // Actualizar el estado con los datos del usuario
+                    setUsuario({
+                        nombre: data.nombre || "",
+                        apellidoP: data.apellidoP || "",
+                        apellidoM: data.apellidoM || "",
+                        email: data.email || "",
+                    });
+                } else {
+                    throw new Error("Datos del usuario vacíos");
+                }
             } catch (error) {
+                console.error("Error al cargar los datos del usuario:", error);
                 Alert.alert("Error", "No se pudo cargar el usuario");
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchUsuario();
-    }, [id]);
+    }, [id]); // Dependencia de 'id' para que se ejecute cada vez que cambie
+
+    // Verificar si se están recibiendo correctamente los datos
+    console.log("Estado de usuario:", usuario);
 
     const handleEditar = async () => {
         if (!usuario.nombre || !usuario.apellidoP || !usuario.email) {
@@ -54,6 +78,14 @@ const EditarUsuario = () => {
             Alert.alert("Error", "No se pudo actualizar el usuario");
         }
     };
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#8E44AD" />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -108,6 +140,12 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: "#222831",
         justifyContent: "center",
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#222831",
     },
     title: {
         fontSize: 26,

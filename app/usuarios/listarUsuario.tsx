@@ -38,11 +38,11 @@ const ListarUsuarios = () => {
             <TouchableOpacity style={styles.addButtonContainer} onPress={() => router.push("/usuarios/agregarUsuario")}>
                 <Text style={styles.addButton}>+ Agregar Usuario</Text>
             </TouchableOpacity>
-             <View style={styles.header}>
-                            <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/Home")}>
-                                <Ionicons name="home" size={32} color="#9370DB" />
-                            </TouchableOpacity>
-                        </View>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/Home")}>
+                    <Ionicons name="home" size={32} color="#9370DB" />
+                </TouchableOpacity>
+            </View>
             <Text style={styles.title}>Lista de Usuarios</Text>
             {loading ? (
                 <ActivityIndicator size="large" color="#8E44AD" />

@@ -7,25 +7,34 @@ export default function Interactuar() {
     const [mensajeJSON, setMensajeJSON] = useState<string | null>(null);
     const [focoEncendido, setFocoEncendido] = useState(false);
     const [servoAbierto, setServoAbierto] = useState(false);
+    const [historial, setHistorial] = useState<Record<string, { foco: number; servo: number }>>({});
+
+    const obtenerFecha = () => {
+        const ahora = new Date();
+        return ahora.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit" }); // "02/05"
+    };
 
     const obtenerFechaHoraActual = () => {
-        const ahora = new Date();
-        return ahora.toLocaleString(); // formato: dd/mm/yyyy hh:mm:ss
+        return new Date().toLocaleString();
     };
 
     const enviarSenal = (dispositivo: "foco" | "servomotor") => {
+        const fecha = obtenerFecha();
+        const hoy = historial[fecha] || { foco: 0, servo: 0 };
+
         let accion = "";
-        let nuevoEstado = "";
 
         if (dispositivo === "foco") {
             accion = focoEncendido ? "apagar_foco" : "encender_foco";
-            nuevoEstado = focoEncendido ? "Apagar Foco" : "Encender Foco";
             setFocoEncendido(!focoEncendido);
-        } else if (dispositivo === "servomotor") {
+            hoy.foco += 1;
+        } else {
             accion = servoAbierto ? "cerrar_servomotor" : "abrir_servomotor";
-            nuevoEstado = servoAbierto ? "Cerrar Servomotor" : "Abrir Servomotor";
             setServoAbierto(!servoAbierto);
+            hoy.servo += 1;
         }
+
+        setHistorial({ ...historial, [fecha]: hoy });
 
         const jsonSimulado = {
             mensaje: "Envío al backend http://localhost:3001/",
@@ -36,32 +45,63 @@ export default function Interactuar() {
         setMensajeJSON(JSON.stringify(jsonSimulado, null, 2));
     };
 
+    // Obtener todas las fechas para mostrar
+    const fechas = Object.keys(historial);
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>🎮 Panel de Interacción</Text>
 
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => enviarSenal("foco")}
-            >
+            <TouchableOpacity style={styles.button} onPress={() => enviarSenal("foco")}>
                 <Text style={styles.buttonText}>
                     💡 {focoEncendido ? "Apagar Foco" : "Encender Foco"}
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => enviarSenal("servomotor")}
-            >
+            <TouchableOpacity style={styles.button} onPress={() => enviarSenal("servomotor")}>
                 <Text style={styles.buttonText}>
                     ⚙️ {servoAbierto ? "Cerrar Servomotor" : "Abrir Servomotor"}
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-                style={[styles.button, styles.backButton]}
-                onPress={() => router.push("/Home")}
-            >
+            <Text style={styles.graphTitle}>📊 Interacciones por Día</Text>
+            {fechas.map((fecha) => {
+                const { foco, servo } = historial[fecha];
+                const max = Math.max(foco, servo, 1);
+                return (
+                    <View key={fecha} style={styles.dayContainer}>
+                        <Text style={styles.dateLabel}>🗓 {fecha}</Text>
+                        <View style={styles.barContainer}>
+                            <Text style={styles.barLabel}>Foco</Text>
+                            <View
+                                style={[
+                                    styles.bar,
+                                    {
+                                        width: `${(foco / max) * 100}%`,
+                                        backgroundColor: "#8E44AD",
+                                    },
+                                ]}
+                            />
+                            <Text style={styles.barValue}>{foco}</Text>
+                        </View>
+                        <View style={styles.barContainer}>
+                            <Text style={styles.barLabel}>Servo</Text>
+                            <View
+                                style={[
+                                    styles.bar,
+                                    {
+                                        width: `${(servo / max) * 100}%`,
+                                        backgroundColor: "#3498DB",
+                                    },
+                                ]}
+                            />
+                            <Text style={styles.barValue}>{servo}</Text>
+                        </View>
+                    </View>
+                );
+            })}
+
+            <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => router.push("/Home")}>
                 <Text style={styles.buttonText}>🔙 Volver al Inicio</Text>
             </TouchableOpacity>
 
@@ -118,5 +158,42 @@ const styles = StyleSheet.create({
         color: "#00FF9F",
         fontFamily: "monospace",
         fontSize: 14,
+    },
+    graphTitle: {
+        fontSize: 18,
+        color: "#fff",
+        fontWeight: "bold",
+        marginTop: 30,
+        marginBottom: 10,
+    },
+    dayContainer: {
+        marginBottom: 15,
+        width: "100%",
+    },
+    dateLabel: {
+        color: "#fff",
+        fontWeight: "bold",
+        marginBottom: 5,
+    },
+    barContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 5,
+        width: "90%",
+    },
+    barLabel: {
+        color: "#fff",
+        width: 60,
+    },
+    bar: {
+        height: 20,
+        borderRadius: 5,
+        marginHorizontal: 5,
+        backgroundColor: "#ccc",
+    },
+    barValue: {
+        color: "#fff",
+        width: 30,
+        textAlign: "right",
     },
 });

@@ -106,38 +106,34 @@ const Sensores = () => {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaView style={styles.container}>
-                <TouchableOpacity onPress={() => router.push("/Home")}>
-                    <Text style={styles.homeIcon}>🏠</Text>
-                </TouchableOpacity>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => router.push("/Home")}>
+                        <Text style={styles.homeIcon}>🏠</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push("/(tabs)/agregar")}>
+                        <Text style={styles.addSensorButton}>+ Agregar Sensor</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <Text style={styles.title}>Registros de Sensores y Actuadores</Text>
 
                 <View style={styles.filtroContainer}>
                     <TouchableOpacity
-                        style={[
-                            styles.filtroButton,
-                            filtro === "Sensor" && styles.filtroActivo,
-                        ]}
+                        style={[styles.filtroButton, filtro === "Sensor" && styles.filtroActivo]}
                         onPress={() => setFiltro("Sensor")}
                     >
                         <Text style={styles.filtroButtonText}>Sensor</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={[
-                            styles.filtroButton,
-                            filtro === "Actuador" && styles.filtroActivo,
-                        ]}
+                        style={[styles.filtroButton, filtro === "Actuador" && styles.filtroActivo]}
                         onPress={() => setFiltro("Actuador")}
                     >
                         <Text style={styles.filtroButtonText}>Actuador</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={[
-                            styles.filtroButton,
-                            filtro === "Todos" && styles.filtroActivo,
-                        ]}
+                        style={[styles.filtroButton, filtro === "Todos" && styles.filtroActivo]}
                         onPress={() => setFiltro("Todos")}
                     >
                         <Text style={styles.filtroButtonText}>Todos</Text>
@@ -166,12 +162,28 @@ const styles = StyleSheet.create({
         backgroundColor: "#222831",
         padding: 20,
     },
+    header: {
+        flexDirection: "row",
+        justifyContent: "center", // Cambiado a 'center' para centrar los elementos
+        alignItems: "center",
+        gap: 20, // Añadido para crear un espacio equilibrado entre los elementos
+        marginBottom: 20,
+    },
     title: {
         fontSize: 24,
         fontWeight: "bold",
         textAlign: "center",
         marginBottom: 20,
         color: "#FFFFFF",
+    },
+    homeIcon: {
+        fontSize: 24,
+        color: "#FFFFFF",
+    },
+    addSensorButton: {
+        fontSize: 16,
+        color: "#1E88E5",
+        fontWeight: "bold",
     },
     card: {
         backgroundColor: "rgba(255,255,255,0.05)",
@@ -223,18 +235,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#555",
     },
-    homeIcon: {
-        fontSize: 24,
-        textAlign: "center",
-        color: "#FFFFFF",
-        marginBottom: 20,
-    },
-    noData: {
-        fontSize: 16,
-        textAlign: "center",
-        color: "#AAAAAA",
-        marginTop: 20,
-    },
     filtroContainer: {
         flexDirection: "row",
         justifyContent: "space-around",
@@ -253,6 +253,12 @@ const styles = StyleSheet.create({
     },
     filtroActivo: {
         backgroundColor: "#43A047",
+    },
+    noData: {
+        fontSize: 16,
+        textAlign: "center",
+        color: "#AAAAAA",
+        marginTop: 20,
     },
 });
 

@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Alert } from "react-native";
-import { Input, Button, Text, Icon } from 'react-native-elements';
+import { Input, Button, Text, Icon, ButtonGroup } from 'react-native-elements';
 import { useRouter } from "expo-router";
 
 const API_URL = "http://localhost:3001/sensoresyactuadores";
 
+// Definir el enum para los tipos de dispositivo
+enum Tipo {
+    Sensor = "Sensor",
+    Actuador = "Actuador",
+}
+
 interface Sensor {
-    tipo: string;
+    tipo: Tipo;
     nombre: string;
     valor: number;
     unidad: string;
@@ -14,15 +20,27 @@ interface Sensor {
 }
 
 const AgregarSensor: React.FC = () => {
-    const [tipo, setTipo] = useState("");
+    const [tipo, setTipo] = useState<Tipo | null>(null); // Empezar con null para que el usuario elija
     const [nombre, setNombre] = useState("");
     const [valor, setValor] = useState("");
     const [unidad, setUnidad] = useState("");
     const router = useRouter();
 
+    // Manejar la selección del tipo
+    const handleTipoChange = (selectedIndex: number) => {
+        const selectedTipo = selectedIndex === 0 ? Tipo.Sensor : Tipo.Actuador;
+        setTipo(selectedTipo);
+    };
+
     const handleAgregar = async () => {
         if (!tipo || !nombre || !valor || !unidad) {
             Alert.alert("Error", "Todos los campos son obligatorios");
+            return;
+        }
+
+        // Asegurarse de que el valor es válido
+        if (tipo === Tipo.Actuador && !["0", "1"].includes(valor)) {
+            Alert.alert("Error", "El valor para un Actuador debe ser 0 o 1");
             return;
         }
 
@@ -52,51 +70,60 @@ const AgregarSensor: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text h3 style={styles.title}>Agregar Nuevo Sensor</Text>
-            <Input
-                placeholder="Tipo de sensor"
-                value={tipo}
-                onChangeText={setTipo}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'tag', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
+            <Text h3 style={styles.title}>
+                {tipo ? (tipo === Tipo.Sensor ? "Agregar Nuevo Sensor" : "Agregar Nuevo Actuador") : "Selecciona un Tipo"}
+            </Text>
+
+            {/* Botón de selección de tipo */}
+            <ButtonGroup
+                buttons={["Sensor", "Actuador"]}
+                selectedIndex={tipo === Tipo.Sensor ? 0 : tipo === Tipo.Actuador ? 1 : -1}
+                onPress={handleTipoChange}
+                containerStyle={styles.buttonGroup}
             />
-            <Input
-                placeholder="Nombre del sensor"
-                value={nombre}
-                onChangeText={setNombre}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'pencil', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
-            />
-            <Input
-                placeholder="Valor"
-                value={valor}
-                onChangeText={setValor}
-                keyboardType="numeric"
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'dollar', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
-            />
-            <Input
-                placeholder="Unidad (°C, %, etc.)"
-                value={unidad}
-                onChangeText={setUnidad}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                leftIcon={{ type: 'font-awesome', name: 'exchange', color: '#8E44AD' }}
-                placeholderTextColor="#aaa"
-            />
-            <Button
-                title="Agregar Sensor"
-                onPress={handleAgregar}
-                buttonStyle={styles.button}
-                titleStyle={styles.buttonText}
-                icon={<Icon name="plus" size={15} color="white" />}
-            />
+            
+            {tipo && (
+                <>
+                    <Input
+                        placeholder="Nombre del dispositivo"
+                        value={nombre}
+                        onChangeText={setNombre}
+                        inputContainerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        leftIcon={{ type: 'font-awesome', name: 'pencil', color: '#8E44AD' }}
+                        placeholderTextColor="#aaa"
+                    />
+                    
+                    <Input
+                        placeholder={tipo === Tipo.Sensor ? "Valor" : "0 o 1"}
+                        value={valor}
+                        onChangeText={setValor}
+                        keyboardType="numeric"
+                        inputContainerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        leftIcon={{ type: 'font-awesome', name: 'dollar', color: '#8E44AD' }}
+                        placeholderTextColor="#aaa"
+                    />
+                    
+                    <Input
+                        placeholder="Unidad (°C, %, etc.)"
+                        value={unidad}
+                        onChangeText={setUnidad}
+                        inputContainerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        leftIcon={{ type: 'font-awesome', name: 'exchange', color: '#8E44AD' }}
+                        placeholderTextColor="#aaa"
+                    />
+
+                    <Button
+                        title={tipo === Tipo.Sensor ? "Agregar Sensor" : "Agregar Actuador"}
+                        onPress={handleAgregar}
+                        buttonStyle={styles.button}
+                        titleStyle={styles.buttonText}
+                        icon={<Icon name="plus" size={15} color="white" />}
+                    />
+                </>
+            )}
 
             {/* Botón pequeño para volver al Home */}
             <Button
@@ -149,6 +176,13 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 18,
     },
+    buttonGroup: {
+        marginBottom: 20,
+        width: "100%",
+        borderWidth: 1,
+        borderColor: "#8E44AD",
+        borderRadius: 10,
+    }
 });
 
 export default AgregarSensor;
