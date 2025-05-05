@@ -1,5 +1,6 @@
+// ...imports iguales
 import React, { useState, useEffect } from "react";
-import {View,Text,ScrollView,TouchableOpacity,Dimensions,Modal,StyleSheet} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, Modal, StyleSheet } from "react-native";
 import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 import { Icon } from "react-native-elements";
 import { useRouter } from "expo-router";
@@ -26,7 +27,6 @@ export default function HomeScreen() {
   const [sensorData, setSensorData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-
   const [focoEncendido, setFocoEncendido] = useState(false);
   const [servoAbierto, setServoAbierto] = useState(false);
   const [contadorFoco, setContadorFoco] = useState(0);
@@ -42,32 +42,14 @@ export default function HomeScreen() {
     const nuevoEstado = !focoEncendido;
     setFocoEncendido(nuevoEstado);
     setContadorFoco((prev) => prev + 1);
-    setMensajeJSON(
-      JSON.stringify(
-        {
-          accion: nuevoEstado ? "Encender foco" : "Apagar foco",
-          fecha: new Date().toLocaleString(),
-        },
-        null,
-        2
-      )
-    );
+    setMensajeJSON(JSON.stringify({ accion: nuevoEstado ? "Encender foco" : "Apagar foco", fecha: new Date().toLocaleString() }, null, 2));
   };
 
   const handleServo = () => {
     const nuevoEstado = !servoAbierto;
     setServoAbierto(nuevoEstado);
     setContadorServo((prev) => prev + 1);
-    setMensajeJSON(
-      JSON.stringify(
-        {
-          accion: nuevoEstado ? "Abrir servomotor" : "Cerrar servomotor",
-          fecha: new Date().toLocaleString(),
-        },
-        null,
-        2
-      )
-    );
+    setMensajeJSON(JSON.stringify({ accion: nuevoEstado ? "Abrir servomotor" : "Cerrar servomotor", fecha: new Date().toLocaleString() }, null, 2));
   };
 
   useEffect(() => {
@@ -101,6 +83,9 @@ export default function HomeScreen() {
     data: [currentSensor?.temperatura ? currentSensor.temperatura / 100 : 0],
   };
 
+  const fechaInicio = sensorData[0]?.fecha || "";
+  const fechaFin = sensorData[sensorData.length - 1]?.fecha || "";
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity style={styles.menuButton} onPress={() => setMenuVisible(!menuVisible)}>
@@ -108,6 +93,7 @@ export default function HomeScreen() {
       </TouchableOpacity>
 
       <Text style={styles.title}>🏠 Bienvenido a la Incubadora Automatizada</Text>
+
       {menuVisible && (
         <View style={styles.menu}>
           <TouchableOpacity onPress={() => router.push("/Home")}>
@@ -124,32 +110,14 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
       )}
-      
+
       <View style={styles.progressContainer}>
         <View>
-        <ProgressChart
-        data={humidityProgress}
-        width={200}
-        height={200}
-        strokeWidth={16}
-        radius={48}
-        chartConfig={styles.chartConfig}
-        hideLegend
-      />
-
+          <ProgressChart data={humidityProgress} width={200} height={200} strokeWidth={16} radius={48} chartConfig={styles.chartConfig} hideLegend />
           <Text style={styles.progressLabel}>💧 {currentSensor?.humedad ?? "--"}%</Text>
         </View>
         <View>
-        <ProgressChart
-        data={temperatureProgress}
-        width={200}
-        height={200}
-        strokeWidth={16}
-        radius={48}
-        chartConfig={styles.chartConfig}
-        hideLegend
-      />
-
+          <ProgressChart data={temperatureProgress} width={200} height={200} strokeWidth={16} radius={48} chartConfig={styles.chartConfig} hideLegend />
           <Text style={styles.progressLabel}>🔥 {currentSensor?.temperatura ?? "--"} °C</Text>
         </View>
       </View>
@@ -157,42 +125,22 @@ export default function HomeScreen() {
       <View style={styles.controlsContainer}>
         <View style={styles.controlItem}>
           <TouchableOpacity
-            style={[
-              styles.controlButton,
-              focoEncendido && styles.controlButtonActive,
-            ]}
+            style={[styles.controlButton, focoEncendido && styles.controlButtonActive]}
             onPress={handleFoco}
           >
-            <Text style={styles.controlText}>
-              {focoEncendido ? "Apagar Foco" : "Encender Foco"}
-            </Text>
+            <Text style={styles.controlText}>{focoEncendido ? "Apagar Foco" : "Encender Foco"}</Text>
           </TouchableOpacity>
-          <Icon
-            name="lightbulb"
-            type="font-awesome-5"
-            color={focoEncendido ? "#FFD700" : "#ccc"}
-            size={30}
-          />
+          <Icon name="lightbulb" type="font-awesome-5" color={focoEncendido ? "#FFD700" : "#ccc"} size={30} />
         </View>
 
         <View style={styles.controlItem}>
           <TouchableOpacity
-            style={[
-              styles.controlButton,
-              servoAbierto && styles.controlButtonActive,
-            ]}
+            style={[styles.controlButton, servoAbierto && styles.controlButtonActive]}
             onPress={handleServo}
           >
-            <Text style={styles.controlText}>
-              {servoAbierto ? "Cerrar Servo" : "Abrir Servo"}
-            </Text>
+            <Text style={styles.controlText}>{servoAbierto ? "Cerrar Servo" : "Abrir Servo"}</Text>
           </TouchableOpacity>
-          <Icon
-            name="cogs"
-            type="font-awesome-5"
-            color={servoAbierto ? "green" : "#ccc"}
-            size={30}
-          />
+          <Icon name="cogs" type="font-awesome-5" color={servoAbierto ? "green" : "#ccc"} size={30} />
         </View>
       </View>
 
@@ -213,10 +161,7 @@ export default function HomeScreen() {
         showBarTops
       />
 
-      <TouchableOpacity
-        style={styles.dateSelectorButton}
-        onPress={() => setModalVisible(true)}
-      >
+      <TouchableOpacity style={styles.dateSelectorButton} onPress={() => setModalVisible(true)}>
         <Text style={styles.dateSelectorText}>📅 Seleccionar Día</Text>
       </TouchableOpacity>
 
@@ -240,6 +185,9 @@ export default function HomeScreen() {
       </Modal>
 
       <Text style={styles.chartTitle}>📈 Temperatura (°C)</Text>
+      <Text style={{ color: "#fff", fontWeight: "600", alignSelf: "flex-start", marginBottom: 5 }}>
+        📅 Del {fechaInicio} al {fechaFin}
+      </Text>
       <LineChart
         data={tempChart}
         width={Dimensions.get("window").width * 0.9}
@@ -250,6 +198,9 @@ export default function HomeScreen() {
       />
 
       <Text style={styles.chartTitle}>💧 Humedad (%)</Text>
+      <Text style={{ color: "#fff", fontWeight: "600", alignSelf: "flex-start", marginBottom: 5 }}>
+        📅 Del {fechaInicio} al {fechaFin}
+      </Text>
       <LineChart
         data={humChart}
         width={Dimensions.get("window").width * 0.9}
@@ -263,20 +214,21 @@ export default function HomeScreen() {
 }
 
 
+
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: "center",
-    backgroundColor: "#222831", // Fondo oscuro
+    backgroundColor: "#222831",
     padding: 20,
-    paddingBottom: 40, // Espacio adicional para los gráficos y botones
+    paddingBottom: 40,
   },
   menuButton: {
     position: "absolute",
     top: 40,
     left: 20,
     zIndex: 1,
-    backgroundColor: "#6A0DAD", // Morado para el botón del menú
+    backgroundColor: "#6A0DAD",
     padding: 12,
     borderRadius: 12,
     shadowColor: "#000",
@@ -289,7 +241,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 90,
     left: 20,
-    backgroundColor: "#F97F51", // Naranja para el menú
+    backgroundColor: "#6A0DAD", // 🔁 ahora morado en vez de naranja
     padding: 15,
     borderRadius: 10,
     zIndex: 1,
@@ -301,20 +253,20 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 20, // 🔼 antes 18
     marginBottom: 12,
-    fontWeight: "600", // Peso de letra más elegante
+    fontWeight: "600",
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700", // Negrita para un efecto más marcado
-    color: "#FFFFFF", // Morado para los títulos
+    fontSize: 32, // 🔼 antes 28
+    fontWeight: "700",
+    color: "#FFFFFF",
     marginTop: 80,
     marginBottom: 10,
   },
   description: {
-    fontSize: 16,
-    color: "#ccc", // Gris claro para los textos de descripción
+    fontSize: 18, // 🔼 antes 16
+    color: "#ccc",
     marginBottom: 20,
     textAlign: "center",
     fontWeight: "400",
@@ -330,7 +282,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: 280,
     marginVertical: 15,
-    backgroundColor: "#BE00FE", // Gris suave para los controles
+    backgroundColor: "#BE00FE",
     borderRadius: 15,
     padding: 15,
     shadowColor: "#000",
@@ -340,7 +292,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   controlButton: {
-    backgroundColor: "#F97F51", // Naranja
+    backgroundColor: "#F97F51",
     paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 10,
@@ -352,14 +304,15 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   controlButtonActive: {
-    backgroundColor: "#6A0DAD", // Morado cuando está activo
+    backgroundColor: "#6A0DAD",
   },
   controlText: {
     color: "#fff",
-    fontWeight: "600", // Texto en negrita
+    fontWeight: "600",
+    fontSize: 18, // 🔼 nuevo
   },
   jsonBox: {
-    backgroundColor: "#2C2F3F", // Fondo oscuro y elegante
+    backgroundColor: "#2C2F3F",
     padding: 12,
     borderRadius: 12,
     marginVertical: 15,
@@ -372,20 +325,20 @@ const styles = StyleSheet.create({
   },
   jsonText: {
     fontFamily: "monospace",
-    fontSize: 20,
-    color: "#3EFF15", // Verde claro para mostrar datos JSON
+    fontSize: 22, // 🔼 antes 20
+    color: "#3EFF15",
   },
   chartTitle: {
-    fontSize: 25,
+    fontSize: 27, // 🔼 antes 25
     fontWeight: "700",
     marginTop: 25,
     marginBottom: 10,
-    color: "#FFFFFF", // Morado
+    color: "#FFFFFF",
   },
   chart: {
     borderRadius: 15,
     marginBottom: 30,
-    backgroundColor: "#222831", // Fondo oscuro de las gráficas
+    backgroundColor: "#222831",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
@@ -397,22 +350,22 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   chartConfig: {
-    backgroundGradientFrom: "#222831", // Fondo oscuro
-    backgroundGradientTo: "#222831", // Fondo oscuro
+    backgroundGradientFrom: "#222831",
+    backgroundGradientTo: "#222831",
     decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(106, 13, 173, ${opacity})`, // Morado
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // Blanco para las etiquetas
+    color: (opacity = 1) => `rgba(106, 13, 173, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     style: {
       borderRadius: 16,
     },
     propsForDots: {
       r: "6",
       strokeWidth: "2",
-      stroke: "#F97F51", // Naranja para los puntos
+      stroke: "#F97F51",
     },
   },
   dateSelectorButton: {
-    backgroundColor: "#6A0DAD", // Morado
+    backgroundColor: "#6A0DAD",
     padding: 14,
     borderRadius: 12,
     marginVertical: 20,
@@ -424,29 +377,30 @@ const styles = StyleSheet.create({
   },
   dateSelectorText: {
     color: "#fff",
-    fontWeight: "600", // Negrita para resaltar el texto
+    fontWeight: "600",
+    fontSize: 18, // 🔼 nuevo
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.6)", // Fondo oscuro transparente
+    backgroundColor: "rgba(0,0,0,0.6)",
     padding: 30,
   },
   modalContent: {
-    backgroundColor: "#2C2F3F", // Fondo elegante y oscuro para el modal
+    backgroundColor: "#2C2F3F",
     borderRadius: 15,
     padding: 25,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: "700", // Título en negrita
+    fontSize: 22, // 🔼 antes 20
+    fontWeight: "700",
     marginBottom: 20,
-    color: "#fff", // Blanco
+    color: "#fff",
   },
   modalItem: {
-    fontSize: 18,
+    fontSize: 20, // 🔼 antes 18
     paddingVertical: 10,
-    color: "#F97F51", // Naranja
+    color: "#F97F51",
     fontWeight: "500",
   },
   progressContainer: {
@@ -458,7 +412,10 @@ const styles = StyleSheet.create({
   progressLabel: {
     textAlign: "center",
     marginTop: -15,
-    fontWeight: "900", // grosor de texto
-    color: "#FFFFFF", // Blanco para los textos de las gráficas circulares
+    fontWeight: "900",
+    color: "#FFFFFF",
+    fontSize: 20, // 🔼 nuevo
   },
 });
+
+
