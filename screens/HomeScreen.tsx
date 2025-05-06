@@ -1,10 +1,10 @@
-// ...imports iguales
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, Modal, StyleSheet } from "react-native";
 import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 import { Icon } from "react-native-elements";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const generateFakeSensorData = () => {
   const data = [];
@@ -27,6 +27,7 @@ export default function HomeScreen() {
   const [sensorData, setSensorData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalType, setModalType] = useState("day");
   const [focoEncendido, setFocoEncendido] = useState(false);
   const [servoAbierto, setServoAbierto] = useState(false);
   const [contadorFoco, setContadorFoco] = useState(0);
@@ -83,8 +84,36 @@ export default function HomeScreen() {
     data: [currentSensor?.temperatura ? currentSensor.temperatura / 100 : 0],
   };
 
+  const semanas = ["Semana 1", "Semana 2", "Semana 3", "Semana 4"];
+  const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
   const fechaInicio = sensorData[0]?.fecha || "";
   const fechaFin = sensorData[sensorData.length - 1]?.fecha || "";
+
+  const renderModalContent = () => {
+    let items = [];
+    if (modalType === "day") {
+      items = sensorData.map((item) => (
+        <TouchableOpacity key={item.fecha} onPress={() => { setSelectedDate(item.fecha); setModalVisible(false); }}>
+          <Text style={styles.modalItem}>{item.fecha}</Text>
+        </TouchableOpacity>
+      ));
+    } else if (modalType === "week") {
+      items = semanas.map((semana, index) => (
+        <TouchableOpacity key={index} onPress={() => { setSelectedDate(semana); setModalVisible(false); }}>
+          <Text style={styles.modalItem}>{semana}</Text>
+        </TouchableOpacity>
+      ));
+    } else {
+      items = meses.map((mes, index) => (
+        <TouchableOpacity key={index} onPress={() => { setSelectedDate(mes); setModalVisible(false); }}>
+          <Text style={styles.modalItem}>{mes}</Text>
+        </TouchableOpacity>
+      ));
+    }
+    return <ScrollView>{items}</ScrollView>;
+  };
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -115,29 +144,25 @@ export default function HomeScreen() {
         <View>
           <ProgressChart data={humidityProgress} width={200} height={200} strokeWidth={16} radius={48} chartConfig={styles.chartConfig} hideLegend />
           <Text style={styles.progressLabel}>💧 {currentSensor?.humedad ?? "--"}%</Text>
+          <Text style={styles.updatedText}>Actualizado hace 2 horas</Text>
         </View>
         <View>
           <ProgressChart data={temperatureProgress} width={200} height={200} strokeWidth={16} radius={48} chartConfig={styles.chartConfig} hideLegend />
           <Text style={styles.progressLabel}>🔥 {currentSensor?.temperatura ?? "--"} °C</Text>
+          <Text style={styles.updatedText}>Actualizado hace 2 horas</Text>
         </View>
       </View>
 
       <View style={styles.controlsContainer}>
         <View style={styles.controlItem}>
-          <TouchableOpacity
-            style={[styles.controlButton, focoEncendido && styles.controlButtonActive]}
-            onPress={handleFoco}
-          >
+          <TouchableOpacity style={[styles.controlButton, focoEncendido && styles.controlButtonActive]} onPress={handleFoco}>
             <Text style={styles.controlText}>{focoEncendido ? "Apagar Foco" : "Encender Foco"}</Text>
           </TouchableOpacity>
           <Icon name="lightbulb" type="font-awesome-5" color={focoEncendido ? "#FFD700" : "#ccc"} size={30} />
         </View>
 
         <View style={styles.controlItem}>
-          <TouchableOpacity
-            style={[styles.controlButton, servoAbierto && styles.controlButtonActive]}
-            onPress={handleServo}
-          >
+          <TouchableOpacity style={[styles.controlButton, servoAbierto && styles.controlButtonActive]} onPress={handleServo}>
             <Text style={styles.controlText}>{servoAbierto ? "Cerrar Servo" : "Abrir Servo"}</Text>
           </TouchableOpacity>
           <Icon name="cogs" type="font-awesome-5" color={servoAbierto ? "green" : "#ccc"} size={30} />
@@ -161,30 +186,41 @@ export default function HomeScreen() {
         showBarTops
       />
 
-      <TouchableOpacity style={styles.dateSelectorButton} onPress={() => setModalVisible(true)}>
-        <Text style={styles.dateSelectorText}>📅 Seleccionar Día</Text>
-      </TouchableOpacity>
+<View style={styles.dateSelectorContainer}>
+        <TouchableOpacity style={styles.dateSelectorButton} onPress={() => { setModalType("day"); setModalVisible(true); }}>
+          <Text style={styles.dateSelectorText}>📅 Día</Text>
+        </TouchableOpacity>
 
-      <Modal visible={modalVisible} transparent>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Selecciona un día:</Text>
-            {sensorData.map((item) => (
-              <TouchableOpacity
-                key={item.fecha}
-                onPress={() => {
-                  setSelectedDate(item.fecha);
-                  setModalVisible(false);
-                }}
-              >
-                <Text style={styles.modalItem}>{item.fecha}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+        <TouchableOpacity style={styles.dateSelectorButton} onPress={() => { setModalType("week"); setModalVisible(true); }}>
+          <Text style={styles.dateSelectorText}>📅 Semana</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.dateSelectorButton} onPress={() => { setModalType("month"); setModalVisible(true); }}>
+          <Text style={styles.dateSelectorText}>📅 Mes</Text>
+        </TouchableOpacity>
+      </View>   
+
+     <Modal visible={modalVisible} transparent animationType="fade">
+        <TouchableOpacity
+          style={modalType === "day" ? styles.modalContainerDay : modalType === "week" ? styles.modalContainerWeek : styles.modalContainerMonth}
+          onPress={() => setModalVisible(false)}
+          activeOpacity={1}
+        >
+          <TouchableOpacity
+            style={styles.modalContent}
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+          >
+            <Text style={styles.modalTitle}>Selecciona una opción:</Text>
+            {renderModalContent()}
+          </TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
 
+
+      {/* TEMP CHART */}
       <Text style={styles.chartTitle}>📈 Temperatura (°C)</Text>
+     
       <Text style={{ color: "#fff", fontWeight: "600", alignSelf: "flex-start", marginBottom: 5 }}>
         📅 Del {fechaInicio} al {fechaFin}
       </Text>
@@ -197,6 +233,7 @@ export default function HomeScreen() {
         style={styles.chart}
       />
 
+      {/* HUM CHART */}
       <Text style={styles.chartTitle}>💧 Humedad (%)</Text>
       <Text style={{ color: "#fff", fontWeight: "600", alignSelf: "flex-start", marginBottom: 5 }}>
         📅 Del {fechaInicio} al {fechaFin}
@@ -274,42 +311,31 @@ const styles = StyleSheet.create({
   controlsContainer: {
     marginVertical: 20,
     width: "100%",
-    alignItems: "center",
+    flexDirection: 'row',  // Aseguramos que los botones estén en fila
+    justifyContent: 'center',  // Alineamos los botones al centro
+    alignItems: 'center',  // Alineamos los elementos verticalmente
   },
   controlItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: 280,
-    marginVertical: 15,
-    backgroundColor: "#BE00FE",
-    borderRadius: 15,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 4,
+    flexDirection: 'column',  // Los botones van en columna
+    alignItems: 'center',  // Centrado de los botones
+    justifyContent: 'center',
+    marginHorizontal: 15,  // Espacio horizontal entre botones
   },
   controlButton: {
-    backgroundColor: "#F97F51",
-    paddingVertical: 12,
-    paddingHorizontal: 18,
+    backgroundColor: "#444",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 10,
-    marginRight: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
+    marginBottom: 10,
+    width: 200,  // Aseguramos que los botones tengan un tamaño consistente
   },
   controlButtonActive: {
-    backgroundColor: "#6A0DAD",
+    backgroundColor: "#FFD700",
   },
   controlText: {
     color: "#fff",
-    fontWeight: "600",
-    fontSize: 18, // 🔼 nuevo
+    fontSize: 16,
+    textAlign: 'center',  // Alineamos el texto al centro
   },
   jsonBox: {
     backgroundColor: "#2C2F3F",
@@ -416,6 +442,19 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 20, // 🔼 nuevo
   },
+  dateSelectorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  
+  dateSelectorButton: {
+    backgroundColor: '#4a148c',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    marginHorizontal: 4, // espaciado entre botones
+    flex: 1, // que todos ocupen el mismo ancho
+    alignItems: 'center',
+  },  
 });
-
-

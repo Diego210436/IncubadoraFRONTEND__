@@ -55,7 +55,7 @@ const ListarUsuarios = () => {
                             <Text style={styles.nombre}>{item.nombre} {item.apellidoP} {item.apellidoM}</Text>
                             <Text style={styles.email}>{item.email}</Text>
                             <View style={styles.actions}>
-                                <TouchableOpacity onPress={() => router.push({ pathname: "/usuarios/editarUsuario", params: { id: item._id } })}>
+                                <TouchableOpacity onPress={() => router.push(`/usuarios/editarUsuario?id=${item._id}`)}>
                                     <Text style={styles.editButton}>Editar</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => router.push({ pathname: "/usuarios/eliminarUsuario", params: { id: item._id } })}>
